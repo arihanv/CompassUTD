@@ -21,7 +21,7 @@ export default function Chat() {
   const [isProcessing, setIsProcessing] = React.useState<boolean>(false);
   const [completedTyping, setCompletedTyping] = React.useState(false);
   const [displayResponse, setDisplayResponse] = React.useState("");
-  const [conversationId, setConversationId] = useAtom(conversationIdAtom);
+  const [conversationId] = useAtom(conversationIdAtom);
 
   function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -40,11 +40,13 @@ export default function Chat() {
   };
 
   async function fetchPreviousMessages() {
+    setIsProcessing(true);
     const data = await axios
       .get(
         `${process.env.NEXT_PUBLIC_API_ROUTE}/get_messages/${conversationId}`
       )
       .then((res) => {
+        setIsProcessing(false);
         return res.data;
       });
     console.log(data);
@@ -130,7 +132,7 @@ export default function Chat() {
           </div>
           <Badge
             variant={"secondary"}
-            className="bg-green-100 flex gap-1 justify-center items-center text-black pointer-events-none border-green-50"
+            className="bg-green-100 sm:flex gap-1 justify-center items-center text-black pointer-events-none border-green-50 hidden"
           >
             <div className="w-2 aspect-square rounded-full bg-green-500 animate-pulse"></div>{" "}
             Online
