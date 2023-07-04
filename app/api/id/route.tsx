@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 const { MongoClient, ServerApiVersion } = require("mongodb");
 const uri =
-  "mongodb+srv://compass-utd.gc5s9o8.mongodb.net/?retryWrites=true&w=majority";
+  "mongodb+srv://admin:Nx953vDh6wVms8Ih@compass-utd.gc5s9o8.mongodb.net/?retryWrites=true&w=majority";
 
 export async function POST(req: NextRequest) {
   const client = new MongoClient(uri, {
@@ -11,15 +11,30 @@ export async function POST(req: NextRequest) {
       deprecationErrors: true,
     },
   });
+
   async function run() {
     try {
-      // Connect the client to the server	(optional starting in v4.7)
+      // Connect the client to the server (optional starting in v4.7)
       await client.connect();
-      await client.db("admin").command({ ping: 1 });
-      console.log(
-        "Pinged your deployment. You successfully connected to MongoDB!"
-      );
+      // Send a ping to confirm a successful connection
+      await client.db("Compass-UTD").command({ ping: 1 });
+
+      const db = client.db("history");
+      const collectionName = "Chat History";
+      const collection = db.collection(collectionName);
+
+      // JSON data
+      const jsonData = {
+        userId: "123",
+        userMessage: "Hello!",
+        botMessage: "Hi, how can I assist you?",
+      };
+
+      // Insert the JSON data into the collection
+      await collection.insertOne(jsonData);
+      console.log("Data inserted successfully!");
     } finally {
+      // Ensures that the client will close when you finish/error
       await client.close();
     }
   }
