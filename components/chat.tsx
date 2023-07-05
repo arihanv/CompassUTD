@@ -7,10 +7,12 @@ import axios from "axios";
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
 import { atom, useAtom } from "jotai";
 import HistorySelect from "./historySelect";
+import { useLocalStorage } from 'usehooks-ts'
+import ChatMessages from "./chatMessages";
 
-export const conversationIdAtom = atom("Today");
+export const conversationIdAtom = atom("New Chat");
 
-type Message = {
+export type Message = {
   id: number;
   text: string;
 };
@@ -21,15 +23,36 @@ export default function Chat() {
   const [isProcessing, setIsProcessing] = React.useState<boolean>(false);
   const [completedTyping, setCompletedTyping] = React.useState(false);
   const [displayResponse, setDisplayResponse] = React.useState("");
-  const [conversationId] = useAtom(conversationIdAtom);
+  const [conversationId, setConversationId] = useAtom(conversationIdAtom);
+  const [allConversationIds, setAllConversationIds] = useLocalStorage("Convos", ["New Chat"]);
 
   function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   async function getData(prompt: string) {
-    await sleep(1000);
-    return prompt;
+    let token = "";
+    if(conversationId !== "New Chat") {
+      token = conversationId;
+    }
+    const params = { token: token, user_message: prompt };
+    const queryString = new URLSearchParams(params).toString();
+
+    const req = await axios
+      .post(`${process.env.NEXT_PUBLIC_API_ROUTE}/inference/?${queryString}`)
+      .then((response) => {
+        console.log(response.data); 
+        return response.data;
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+    setConversationId(req.token);
+    if(!allConversationIds.includes(req.token)){
+    setAllConversationIds((prev) => [...prev, req.token]);
+    }
+
+    return req.bot_message;
   }
 
   const bot = async (input: string) => {
@@ -55,7 +78,7 @@ export default function Chat() {
 
   React.useEffect(() => {
     async function initializeMessages() {
-      if (conversationId === "Today") {
+      if (conversationId === "New Chat") {
         setMessages([
           {
             id: 0,
@@ -68,7 +91,7 @@ export default function Chat() {
 
       const mappedMessages = previousMessages.map(
         (message: any, index: number) => {
-          const id = index % 2 === 0 ? 0 : 1;
+          const id = index % 2 === 0 ? 1 : 0;
           return {
             id: id,
             text: message.user_message || message.bot_message,
@@ -118,6 +141,9 @@ export default function Chat() {
   return (
     <div className="h-full border-gray-700 w-full rounded-xl border p-1">
       <div className="border border-gray-700 h-full w-full rounded-lg flex flex-col">
+        <button onClick={() => setAllConversationIds(["New Chat"])}>
+          Delete Convos
+        </button>
         <div className="w-full bg-orange-800 p-2 border-b border-gray-700 rounded-t-md flex justify-between items-center">
           <div className="flex gap-2 items-center font-semibold tracking-tight">
             <Avatar>
@@ -139,41 +165,11 @@ export default function Chat() {
           </Badge>
         </div>
         <div className="flex-1 p-2 overflow-scroll text-sm">
-          {messages.map((message, index) => (
-            <div
-              key={index}
-              className={`flex ${
-                message.id === 1 ? "justify-end" : "justify-start"
-              } mb-2`}
-            >
-              <div
-                className={`rounded-lg p-2 bg-gray-200 dark:bg-gray-800 max-w-[70%] ${
-                  message.id === 0 && index === messages.length - 1
-                    ? "ml-2"
-                    : message.id === 0
-                    ? "ml-2"
-                    : "mr-2 mesUser"
-                }`}
-              >
-                {message.id === 0 && index === messages.length - 1 ? (
-                  <div className="!text-sm">
-                    {displayResponse}
-                    {!completedTyping && (
-                      <svg
-                        viewBox="8 4 8 16"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="cursor !filter-invert"
-                      >
-                        <rect x="10" y="6" width="4" height="12" fill="#fff" />
-                      </svg>
-                    )}
-                  </div>
-                ) : (
-                  <p className="text-sm">{message.text}</p>
-                )}
-              </div>
-            </div>
-          ))}
+          <ChatMessages
+            messages={messages}
+            displayResponse={displayResponse}
+            completedTyping={completedTyping}
+          />
           {isProcessing && (
             <div className="flex justify-center mb-2">
               <div className="text-sm text-gray-500 animate-spin repeat-infinite">
