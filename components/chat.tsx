@@ -207,6 +207,13 @@ export default function Chat() {
           <Input
             className="rounded-r-none focus-visible:ring-0"
             type="text"
+            onBlur={() => {
+              window.scrollTo({
+                top: 0,
+                left: 0,
+                behavior: 'smooth'
+              });
+            }}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && send(input)}
