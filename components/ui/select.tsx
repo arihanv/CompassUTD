@@ -24,7 +24,9 @@ const SelectTrigger = React.forwardRef<
     )}
     {...props}
   >
+    <span className="whitespace-pre overflow-hidden text-ellipsis max-w-[100px]">
     {children}
+    </span>
     <SelectPrimitive.Icon asChild>
       <CaretSortIcon className="h-4 w-4 opacity-50" />
     </SelectPrimitive.Icon>

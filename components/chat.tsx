@@ -1,14 +1,19 @@
 "use client";
 import React from "react";
 import { Input } from "./ui/input";
-import { Send, Loader2 } from "lucide-react";
+import { Send, Loader2, Trash, MoreVertical } from "lucide-react";
 import { Badge } from "./ui/badge";
 import axios from "axios";
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
 import { atom, useAtom } from "jotai";
 import HistorySelect from "./historySelect";
-import { useLocalStorage } from 'usehooks-ts'
+import { useLocalStorage } from "usehooks-ts";
 import ChatMessages from "./chatMessages";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 export const conversationIdAtom = atom("New Chat");
 
@@ -24,7 +29,10 @@ export default function Chat() {
   const [completedTyping, setCompletedTyping] = React.useState(false);
   const [displayResponse, setDisplayResponse] = React.useState("");
   const [conversationId, setConversationId] = useAtom(conversationIdAtom);
-  const [allConversationIds, setAllConversationIds] = useLocalStorage("Convos", ["New Chat"]);
+  const [allConversationIds, setAllConversationIds] = useLocalStorage(
+    "Convos",
+    ["New Chat"]
+  );
 
   function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -32,7 +40,7 @@ export default function Chat() {
 
   async function getData(prompt: string) {
     let token = "";
-    if(conversationId !== "New Chat") {
+    if (conversationId !== "New Chat") {
       token = conversationId;
     }
     const params = { token: token, user_message: prompt };
@@ -41,15 +49,15 @@ export default function Chat() {
     const req = await axios
       .post(`${process.env.NEXT_PUBLIC_API_ROUTE}/inference/?${queryString}`)
       .then((response) => {
-        console.log(response.data); 
+        console.log(response.data);
         return response.data;
       })
       .catch((error) => {
         console.error("Error:", error);
       });
     setConversationId(req.token);
-    if(!allConversationIds.includes(req.token)){
-    setAllConversationIds((prev) => [...prev, req.token]);
+    if (!allConversationIds.includes(req.token)) {
+      setAllConversationIds((prev) => [...prev, req.token]);
     }
 
     return req.bot_message;
@@ -141,9 +149,6 @@ export default function Chat() {
   return (
     <div className="h-full border-gray-700 w-full rounded-xl border p-1">
       <div className="border border-gray-700 h-full w-full rounded-lg flex flex-col">
-        <button onClick={() => setAllConversationIds(["New Chat"])}>
-          Delete Convos
-        </button>
         <div className="w-full bg-orange-800 p-2 border-b border-gray-700 rounded-t-md flex justify-between items-center">
           <div className="flex gap-2 items-center font-semibold tracking-tight">
             <Avatar>
@@ -155,6 +160,26 @@ export default function Chat() {
             </Avatar>
             CompassUTD
             <HistorySelect />
+            <Popover>
+              <PopoverTrigger>
+                <MoreVertical />
+              </PopoverTrigger>
+              <PopoverContent className="!w-fit !h-fit !px-4 !py-2">
+                <button
+                  className="w-fit flex"
+                  onClick={() => {
+                    setConversationId("New Chat");
+                    setAllConversationIds(["New Chat"]);
+                    window.location.reload();
+                  }}
+                >
+                  <div className="flex text-sm gap-2 w-fit items-center">
+                    <Trash color={"red"} size={15} />
+                    Delete Chat History
+                  </div>
+                </button>
+              </PopoverContent>
+            </Popover>
           </div>
           <Badge
             variant={"secondary"}
