@@ -1,16 +1,23 @@
 "use client";
 import React from "react";
 import { Input } from "./ui/input";
-import { Send, Loader2 } from "lucide-react";
+import { Send, Loader2, Trash, MoreVertical } from "lucide-react";
 import { Badge } from "./ui/badge";
 import axios from "axios";
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
 import { atom, useAtom } from "jotai";
 import HistorySelect from "./historySelect";
+import { useLocalStorage } from "usehooks-ts";
+import ChatMessages from "./chatMessages";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
-export const conversationIdAtom = atom("Today");
+export const conversationIdAtom = atom("New Chat");
 
-type Message = {
+export type Message = {
   id: number;
   text: string;
 };
@@ -21,15 +28,39 @@ export default function Chat() {
   const [isProcessing, setIsProcessing] = React.useState<boolean>(false);
   const [completedTyping, setCompletedTyping] = React.useState(false);
   const [displayResponse, setDisplayResponse] = React.useState("");
-  const [conversationId] = useAtom(conversationIdAtom);
+  const [conversationId, setConversationId] = useAtom(conversationIdAtom);
+  const [allConversationIds, setAllConversationIds] = useLocalStorage(
+    "Convos",
+    ["New Chat"]
+  );
 
   function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   async function getData(prompt: string) {
-    await sleep(1000);
-    return prompt;
+    let token = "";
+    if (conversationId !== "New Chat") {
+      token = conversationId;
+    }
+    const params = { token: token, user_message: prompt };
+    const queryString = new URLSearchParams(params).toString();
+
+    const req = await axios
+      .post(`${process.env.NEXT_PUBLIC_API_ROUTE}/inference/?${queryString}`)
+      .then((response) => {
+        console.log(response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+    setConversationId(req.token);
+    if (!allConversationIds.includes(req.token)) {
+      setAllConversationIds((prev) => [...prev, req.token]);
+    }
+
+    return req.bot_message;
   }
 
   const bot = async (input: string) => {
@@ -55,7 +86,7 @@ export default function Chat() {
 
   React.useEffect(() => {
     async function initializeMessages() {
-      if (conversationId === "Today") {
+      if (conversationId === "New Chat") {
         setMessages([
           {
             id: 0,
@@ -68,7 +99,7 @@ export default function Chat() {
 
       const mappedMessages = previousMessages.map(
         (message: any, index: number) => {
-          const id = index % 2 === 0 ? 0 : 1;
+          const id = index % 2 === 0 ? 1 : 0;
           return {
             id: id,
             text: message.user_message || message.bot_message,
@@ -129,6 +160,26 @@ export default function Chat() {
             </Avatar>
             CompassUTD
             <HistorySelect />
+            <Popover>
+              <PopoverTrigger>
+                <MoreVertical />
+              </PopoverTrigger>
+              <PopoverContent className="!w-fit !h-fit !px-4 !py-2">
+                <button
+                  className="w-fit flex"
+                  onClick={() => {
+                    setConversationId("New Chat");
+                    setAllConversationIds(["New Chat"]);
+                    window.location.reload();
+                  }}
+                >
+                  <div className="flex text-sm gap-2 w-fit items-center">
+                    <Trash color={"red"} size={15} />
+                    Delete Chat History
+                  </div>
+                </button>
+              </PopoverContent>
+            </Popover>
           </div>
           <Badge
             variant={"secondary"}
@@ -139,41 +190,11 @@ export default function Chat() {
           </Badge>
         </div>
         <div className="flex-1 p-2 overflow-scroll text-sm">
-          {messages.map((message, index) => (
-            <div
-              key={index}
-              className={`flex ${
-                message.id === 1 ? "justify-end" : "justify-start"
-              } mb-2`}
-            >
-              <div
-                className={`rounded-lg p-2 bg-gray-200 dark:bg-gray-800 max-w-[70%] ${
-                  message.id === 0 && index === messages.length - 1
-                    ? "ml-2"
-                    : message.id === 0
-                    ? "ml-2"
-                    : "mr-2 mesUser"
-                }`}
-              >
-                {message.id === 0 && index === messages.length - 1 ? (
-                  <div className="!text-sm">
-                    {displayResponse}
-                    {!completedTyping && (
-                      <svg
-                        viewBox="8 4 8 16"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="cursor !filter-invert"
-                      >
-                        <rect x="10" y="6" width="4" height="12" fill="#fff" />
-                      </svg>
-                    )}
-                  </div>
-                ) : (
-                  <p className="text-sm">{message.text}</p>
-                )}
-              </div>
-            </div>
-          ))}
+          <ChatMessages
+            messages={messages}
+            displayResponse={displayResponse}
+            completedTyping={completedTyping}
+          />
           {isProcessing && (
             <div className="flex justify-center mb-2">
               <div className="text-sm text-gray-500 animate-spin repeat-infinite">
