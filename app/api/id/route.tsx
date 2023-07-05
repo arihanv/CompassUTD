@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 const { MongoClient, ServerApiVersion } = require("mongodb");
-const uri =
-  "mongodb+srv://admin:Nx953vDh6wVms8Ih@compass-utd.gc5s9o8.mongodb.net/?retryWrites=true&w=majority";
+const uri =""
+  // "mongodb+srv://admin:Nx953vDh6wVms8Ih@compass-utd.gc5s9o8.mongodb.net/?retryWrites=true&w=majority";
 
 export async function POST(req: NextRequest) {
   const client = new MongoClient(uri, {

@@ -68,6 +68,7 @@
   }
 }
 
+
 @layer base {
   * {
     @apply border-border;
@@ -86,6 +87,7 @@
     background-color: rgb(37 99 235) !important;
     color: white;
   }
+
 
   @keyframes flicker {
     0% {
