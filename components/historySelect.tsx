@@ -37,7 +37,7 @@ export default function HistorySelect() {
       </SelectTrigger>
       <SelectContent>
         <div className="max-h-[200px] overflow-y-auto">
-        {conversations.map((convo: Conversation, key: number) => (
+        {conversations !== null && Object.keys(conversations).length > 0 && conversations.map((convo: Conversation, key: number) => (
           <SelectItem key={key} value={convo.token}>
               {convo.date}
           </SelectItem>
