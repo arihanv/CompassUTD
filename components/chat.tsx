@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/popover";
 
 export const conversationIdAtom = atom("New Chat");
+export const dateAtom = atom("New Chat")
 
 export type Message = {
   id: number;
@@ -29,9 +30,11 @@ export default function Chat() {
   const [completedTyping, setCompletedTyping] = React.useState(false);
   const [displayResponse, setDisplayResponse] = React.useState("");
   const [conversationId, setConversationId] = useAtom(conversationIdAtom);
+  const [date, setDate] = useAtom(dateAtom);
   const [allConversationIds, setAllConversationIds] = useLocalStorage(
     "Convos",
-    ["New Chat"]
+    [{date:"New Chat", token:"New Chat"}]
+    // ["New Chat"]
   );
 
   function sleep(ms: number) {
@@ -55,10 +58,13 @@ export default function Chat() {
       .catch((error) => {
         console.error("Error:", error);
       });
+
+    const currTime = new Date().toLocaleString('en-US', { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, hour12: false });
     setConversationId(req.token);
-    if (!allConversationIds.includes(req.token)) {
-      setAllConversationIds((prev) => [...prev, req.token]);
+    if (!allConversationIds.some((conversation) => conversation.token === req.token)) {
+      setAllConversationIds((prev) => [...prev, { date: currTime, token: req.token }]);
     }
+    setDate(currTime);
 
     return req.bot_message;
   }
@@ -169,7 +175,7 @@ export default function Chat() {
                   className="w-fit flex"
                   onClick={() => {
                     setConversationId("New Chat");
-                    setAllConversationIds(["New Chat"]);
+                    setAllConversationIds([{date:"New Chat", token:"New Chat"}]);
                     window.location.reload();
                   }}
                 >
