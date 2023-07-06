@@ -36,15 +36,13 @@ export default function HistorySelect() {
         <SelectValue placeholder={date} />
       </SelectTrigger>
       <SelectContent>
-        {/* <SelectItem value="Today">Today</SelectItem>
-        <SelectItem value="XyDV6qbV1X1XGma_">XyDV6qbV1X1XGma_</SelectItem>
-        <SelectItem value="A1ObHOP6B2QELwtk">A1ObHOP6B2QELwtk</SelectItem>
-        <SelectItem value="kQt_hwVyiIDR_-Y6">kQt_hwVyiIDR_-Y6</SelectItem> */}
+        <div className="max-h-[200px] overflow-y-auto">
         {conversations.map((convo: Conversation, key: number) => (
           <SelectItem key={key} value={convo.token}>
               {convo.date}
           </SelectItem>
         ))}
+                </div>
       </SelectContent>
     </Select>
   );

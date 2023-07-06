@@ -96,7 +96,7 @@ export default function Chat() {
         setMessages([
           {
             id: 0,
-            text: "Hello, I'm Temoc. How can I help you?",
+            text: "Hi! I'm Temoc, your unofficial College Advising assistant. Please note that my responses may not always be entirely accurate. How can I help?",
           },
         ]);
         return;
