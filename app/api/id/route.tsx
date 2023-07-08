@@ -1,7 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 const { MongoClient, ServerApiVersion } = require("mongodb");
-const uri =""
-  // "mongodb+srv://admin:Nx953vDh6wVms8Ih@compass-utd.gc5s9o8.mongodb.net/?retryWrites=true&w=majority";
+const uri =`mongodb+srv://${process.env.MONGODB_LOGIN}@${process.env.MONGODB_LOCATION}/?retryWrites=true&w=majority`;
 
 export async function POST(req: NextRequest) {
   const client = new MongoClient(uri, {
@@ -17,20 +16,20 @@ export async function POST(req: NextRequest) {
       // Connect the client to the server (optional starting in v4.7)
       await client.connect();
       // Send a ping to confirm a successful connection
-      await client.db("Compass-UTD").command({ ping: 1 });
+      // await client.db("views").command({ ping: 1 });
 
-      const db = client.db("history");
-      const collectionName = "Chat History";
+      const db = client.db("views");
+      const collectionName = "views";
       const collection = db.collection(collectionName);
 
       // JSON data
+      const currentDate = new Date();
+      const formattedDate = currentDate.toLocaleDateString();
+      const formattedTime = currentDate.toLocaleTimeString('en-US', { hour12: false });
       const jsonData = {
-        userId: "123",
-        userMessage: "Hello!",
-        botMessage: "Hi, how can I assist you?",
+        date: `${formattedDate} ${formattedTime}`,
       };
 
-      // Insert the JSON data into the collection
       await collection.insertOne(jsonData);
       console.log("Data inserted successfully!");
     } finally {
@@ -39,9 +38,36 @@ export async function POST(req: NextRequest) {
     }
   }
   run().catch(console.dir);
-  const body = await req.json();
-  console.log(body.id);
-  const { searchParams } = new URL(req.url);
-  const userId = searchParams.get("id");
-  return NextResponse.json({ error: userId }, { status: 200 });
+  // const body = await req.json();
+  // console.log(body.id);
+  // const { searchParams } = new URL(req.url);
+  // const userId = searchParams.get("id");
+  return NextResponse.json({ status: 200 });
 }
+
+export async function GET() {
+  const client = new MongoClient(uri, {
+    serverApi: {
+      version: ServerApiVersion.v1,
+      strict: true,
+      deprecationErrors: true,
+    },
+  });
+
+
+  async function run() {
+    try {
+      await client.connect();
+      const db = client.db("views");
+      const collectionName = "views";
+      const collection = db.collection(collectionName);
+      const count = await collection.countDocuments();
+      return count;
+    } finally {
+      await client.close();
+    }
+  }
+  const count = await run().catch(console.dir);
+  return NextResponse.json({ status: 200, body: { count } });
+}
+

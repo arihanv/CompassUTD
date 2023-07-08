@@ -15,7 +15,7 @@ export default function ChatMessages({messages, displayResponse, completedTyping
     {messages.map((message, index) => (
         <div
           key={index}
-          className={`flex ${
+          className={`flex break-words ${
             message.id === 1 ? "justify-end" : "justify-start"
           } mb-2`}
         >

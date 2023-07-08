@@ -88,6 +88,13 @@
     color: white;
   }
 
+  .grad-text{
+    --geist-text-gradient: linear-gradient(180deg,#fff,hsla(0,0%,100%,.75));
+    background: var(--geist-text-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
 
   @keyframes flicker {
     0% {
