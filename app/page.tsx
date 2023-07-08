@@ -15,14 +15,17 @@ export default function IndexPage({}: Props) {
   const [messageCount, setMessageCount] = React.useState(0);
 
   function time_diff(providedDate: any) {
+    console.log(providedDate)
     var currentDate = new Date();
-    var difference = currentDate.getTime() - new Date(providedDate).getTime();
-
+  
+    // Calculate the time difference in milliseconds
+    var difference = currentDate.getTime() - providedDate * 1000;
+  
     // Calculate the time difference in hours, minutes, and seconds
     var hours = Math.floor(difference / (1000 * 60 * 60));
     var minutes = Math.floor((difference / (1000 * 60)) % 60);
     var seconds = Math.floor((difference / 1000) % 60);
-
+  
     // Determine the most relevant unit
     var closestUnit;
     var closestValue;
@@ -36,9 +39,10 @@ export default function IndexPage({}: Props) {
       closestUnit = "seconds";
       closestValue = seconds;
     }
-
+  
     return closestValue + " " + closestUnit;
   }
+  
   React.useEffect(() => {
     async function executeRequests() {
       try {
@@ -77,7 +81,7 @@ export default function IndexPage({}: Props) {
         >
           
           {/* <Image src={image} alt="Picture of the author" className="max-h-[400px] 2xl:max-h-fit object-scale-down group-hover:blur-[0.75px] transition-all ease-in-out" /> */}
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-2 flex-wrap justify-center">
             <div className="hidden w-[150px] flex-col sm:flex justify-center font-bold tracking-tight grad-text text-2xl z-10">
               <div className="transition opacity-100 ease-in-out">
                 <div className="text-base">
@@ -87,8 +91,8 @@ export default function IndexPage({}: Props) {
                         Recent Users
                       </span>
                       {pageCount.documents.map((object: any) => (
-                        <div key={object.date}>
-                          {time_diff(object.date)} ago
+                        <div key={object.time}>
+                          {time_diff(object.time)} ago
                         </div>
                       ))}
                     </>
