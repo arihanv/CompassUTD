@@ -1,14 +1,11 @@
-"use client"
+"use client";
 import Chat from "@/components/chat";
 import React from "react";
 import axios from "axios";
 
 export default function Home() {
   React.useEffect(() => {
-    // axios.post("/api/id").then((res) => {
-    //   console.log(res.data);
-    // });
-    axios.get("/api/id").then((res) => {
+    axios.post("/api/id").then((res) => {
       console.log(res.data);
     });
   }, []);
