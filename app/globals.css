@@ -88,6 +88,30 @@
     color: white;
   }
 
+  .grad-text{
+    --geist-text-gradient: linear-gradient(180deg,#fff,hsla(0,0%,100%,.75));
+    background: var(--geist-text-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .dark-shadow {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 350px; /* Adjust the height as desired */
+    background: linear-gradient(to top, hsla(224, 71.4%, 4.1%, 1), hsla(224, 71.4%, 4.1%, 0)); /* Adjust the opacity and gradient as desired */
+  }
+
+  .fade-in {
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  .fade-out {
+    opacity: 0;
+  }
 
   @keyframes flicker {
     0% {
