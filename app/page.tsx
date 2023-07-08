@@ -77,7 +77,7 @@ export default function IndexPage({}: Props) {
         >
           
           {/* <Image src={image} alt="Picture of the author" className="max-h-[400px] 2xl:max-h-fit object-scale-down group-hover:blur-[0.75px] transition-all ease-in-out" /> */}
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-2 flex-wrap justify-center">
             <div className="hidden w-[150px] flex-col sm:flex justify-center font-bold tracking-tight grad-text text-2xl z-10">
               <div className="transition opacity-100 ease-in-out">
                 <div className="text-base">
