@@ -54,20 +54,30 @@ export async function GET() {
     },
   });
 
-
   async function run() {
     try {
       await client.connect();
       const db = client.db("views");
       const collectionName = "views";
       const collection = db.collection(collectionName);
+
+      // Get the total count
       const count = await collection.countDocuments();
-      return count;
+
+      // Get the most recent 5 documents
+      const documents = await collection
+        .find({})
+        .sort({ _id: -1 })
+        .limit(5)
+        .toArray();
+
+      return { count, documents };
     } finally {
       await client.close();
     }
   }
-  const count = await run().catch(console.dir);
-  return NextResponse.json({ status: 200, body: { count } });
-}
 
+  const result = await run().catch(console.dir);
+
+  return NextResponse.json({ status: 200, body: result });
+}
