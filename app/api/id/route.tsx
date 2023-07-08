@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 const { MongoClient, ServerApiVersion } = require("mongodb");
-const uri =`mongodb+srv://${process.env.MONGODB_LOGIN}@${process.env.MONGODB_LOCATION}/?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.MONGODB_LOGIN}@${process.env.MONGODB_LOCATION}/?retryWrites=true&w=majority`;
 
 export async function POST(req: NextRequest) {
   const client = new MongoClient(uri, {
@@ -23,13 +23,12 @@ export async function POST(req: NextRequest) {
       const collection = db.collection(collectionName);
 
       // JSON data
-      const currentDate = new Date();
-      const formattedDate = currentDate.toLocaleDateString();
-      const formattedTime = currentDate.toLocaleTimeString('en-US', { hour12: false });
+      //get current epochs time to seconds
+      const date = new Date();
+      const seconds = Math.round(date.getTime() / 1000);
       const jsonData = {
-        date: `${formattedDate} ${formattedTime}`,
+        time: seconds,
       };
-
       await collection.insertOne(jsonData);
       console.log("Data inserted successfully!");
     } finally {

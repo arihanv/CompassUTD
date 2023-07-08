@@ -15,14 +15,17 @@ export default function IndexPage({}: Props) {
   const [messageCount, setMessageCount] = React.useState(0);
 
   function time_diff(providedDate: any) {
+    console.log(providedDate)
     var currentDate = new Date();
-    var difference = currentDate.getTime() - new Date(providedDate).getTime();
-
+  
+    // Calculate the time difference in milliseconds
+    var difference = currentDate.getTime() - providedDate * 1000;
+  
     // Calculate the time difference in hours, minutes, and seconds
     var hours = Math.floor(difference / (1000 * 60 * 60));
     var minutes = Math.floor((difference / (1000 * 60)) % 60);
     var seconds = Math.floor((difference / 1000) % 60);
-
+  
     // Determine the most relevant unit
     var closestUnit;
     var closestValue;
@@ -36,9 +39,10 @@ export default function IndexPage({}: Props) {
       closestUnit = "seconds";
       closestValue = seconds;
     }
-
+  
     return closestValue + " " + closestUnit;
   }
+  
   React.useEffect(() => {
     async function executeRequests() {
       try {
@@ -87,8 +91,8 @@ export default function IndexPage({}: Props) {
                         Recent Users
                       </span>
                       {pageCount.documents.map((object: any) => (
-                        <div key={object.date}>
-                          {time_diff(object.date)} ago
+                        <div key={object.time}>
+                          {time_diff(object.time)} ago
                         </div>
                       ))}
                     </>
