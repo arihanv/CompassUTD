@@ -62,10 +62,12 @@ export default function IndexPage({}: Props) {
     <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
       <div className="flex flex-col items-center gap-10">
         <div className="flex flex-col gap-5 items-center">
-          <div className="font-bold tracking-tight text-3xl sm:text-4xl md:text-6xl lg:text-8xl">
-            <span className="grad-text">UTD </span>{" "}
-            <span className="grad-text">College</span>{" "}
+          <div className="font-bold flex flex-wrap justify-center items-center tracking-tight text-4xl md:text-6xl lg:text-8xl">
+            <span className="grad-text flex-shrink">UTD </span><span className="invisible">i</span>
+            <span className="inline-block">
+            <span className="grad-text">College</span><span className="invisible">i</span>
             <span className="grad-text">Advisor</span>
+            </span>
           </div>
           <Badge className="w-fit">Public Beta out now</Badge>
         </div>
@@ -106,7 +108,7 @@ export default function IndexPage({}: Props) {
             </Button>
           </div>
             </div>
-            <div className="w-full lg:w-[150px] flex justify-evenly font-bold tracking-tight grad-text text-2xl z-10 mt-20">
+            <div className="w-full lg:w-[150px] flex justify-evenly font-bold tracking-tight grad-text text-2xl z-10 mt-10 lg:mt-20">
               {pageCount !== 0 && messageCount !== 0 && (
                 <div className="flex-row flex-1 flex justify-evenly lg:justify-end lg:flex-col w-full">
                   <div className="transition opacity-100 ease-in-out py-2 lg:border-b border-slate-500 border-opacity-30">
