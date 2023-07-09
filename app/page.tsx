@@ -100,7 +100,7 @@ export default function IndexPage({}: Props) {
                 </div>
               </div>
             </div>
-            <div className="relative flex-1 max-w-[500px] md:p-5 h-[300px] md:h-[400px] transition-all ease-in-out">
+            <div className="relative w-[400px] md:w-[450px] lg:w-[500px]  md:p-5 h-[300px] md:h-[400px] transition-all ease-in-out">
               <ChatDemo />
               <div className="dark-shadow" />
               <div className="absolute z-10 left-0 right-0 top-0 bottom-0 m-auto flex justify-center items-center">
@@ -119,7 +119,7 @@ export default function IndexPage({}: Props) {
                     <span className="flex items-center mr-1 text-4xl">
                       {pageCount.count}+
                     </span>
-                    <span className="inline-block text-lg">Page Views</span>
+                    <span className="inline-block text-lg">Users</span>
                   </div>
                   <div className="transition opacity-100 ease-in-out py-2">
                     <span className="flex items-center mr-1 text-4xl">

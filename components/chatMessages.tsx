@@ -1,18 +1,22 @@
 "use static";
-import React from 'react'
-import { Message } from './chat'
+import React from "react";
+import { Message } from "./chat";
+import ReactMarkdown from "react-markdown";
 
-interface Props{
-    messages: Message[],
-    displayResponse: string,
-    completedTyping: boolean
-
+interface Props {
+  messages: Message[];
+  displayResponse: string;
+  completedTyping: boolean;
 }
 
-export default function ChatMessages({messages, displayResponse, completedTyping}: Props) {
+export default function ChatMessages({
+  messages,
+  displayResponse,
+  completedTyping,
+}: Props) {
   return (
     <>
-    {messages.map((message, index) => (
+      {messages.map((message, index) => (
         <div
           key={index}
           className={`flex break-words ${
@@ -42,11 +46,13 @@ export default function ChatMessages({messages, displayResponse, completedTyping
                 )}
               </div>
             ) : (
-              <p className="text-sm">{message.text}</p>
+              <p className="text-sm">
+                <ReactMarkdown>{message.text}</ReactMarkdown>
+              </p>
             )}
           </div>
         </div>
       ))}
-      </>
-  )
+    </>
+  );
 }
