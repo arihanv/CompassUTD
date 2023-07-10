@@ -1,7 +1,5 @@
 "use client";
 import React from "react";
-import image from "/Users/arihanvaranasi/Dev/Next_Dev/temoc/public/shot.png";
-import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -79,8 +77,6 @@ export default function IndexPage({}: Props) {
           className="group flex flex-1 items-center justify-center"
           href="/chat"
         >
-          
-          {/* <Image src={image} alt="Picture of the author" className="max-h-[400px] 2xl:max-h-fit object-scale-down group-hover:blur-[0.75px] transition-all ease-in-out" /> */}
           <div className="flex gap-2 flex-wrap justify-center">
             <div className="hidden w-[150px] flex-col sm:flex justify-center font-bold tracking-tight grad-text text-2xl z-10">
               <div className="transition opacity-100 ease-in-out">

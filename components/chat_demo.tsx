@@ -3,12 +3,11 @@ import React from "react";
 import { MoreVertical } from "lucide-react";
 import { Badge } from "./ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
-import { atom, useAtom } from "jotai";
+import { atom } from "jotai";
 import HistorySelect from "./historySelect";
 import ChatMessages from "./chatMessages";
 import {
   Popover,
-  PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 
@@ -22,70 +21,8 @@ export type Message = {
 
 export default function ChatDemo() {
   const [messages, setMessages] = React.useState<Message[]>([]);
-//   const [input, setInput] = React.useState<string>("");
-//   const [isProcessing, setIsProcessing] = React.useState<boolean>(false);
   const [completedTyping, setCompletedTyping] = React.useState(false);
   const [displayResponse, setDisplayResponse] = React.useState("");
-//   const [conversationId, setConversationId] = useAtom(conversationIdAtom);
-//   const [date, setDate] = useAtom(dateAtom);
-//   const [allConversationIds, setAllConversationIds] = useLocalStorage(
-//     "Convos",
-//     [{date:"New Chat", token:"New Chat"}]
-//     // ["New Chat"]
-//   );
-
-//   function sleep(ms: number) {
-//     return new Promise((resolve) => setTimeout(resolve, ms));
-//   }
-
-//   async function getData(prompt: string) {
-//     let token = "";
-//     if (conversationId !== "New Chat") {
-//       token = conversationId;
-//     }
-//     const params = { token: token, user_message: prompt };
-//     const queryString = new URLSearchParams(params).toString();
-
-//     const req = await axios
-//       .post(`${process.env.NEXT_PUBLIC_API_ROUTE}/inference/?${queryString}`)
-//       .then((response) => {
-//         console.log(response.data);
-//         return response.data;
-//       })
-//       .catch((error) => {
-//         console.error("Error:", error);
-//       });
-
-//     const currTime = new Date().toLocaleString('en-US', { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, hour12: false });
-//     setConversationId(req.token);
-//     if (!allConversationIds.some((conversation) => conversation.token === req.token)) {
-//       setAllConversationIds((prev) => [...prev, { date: currTime, token: req.token }]);
-//     }
-//     setDate(currTime);
-
-//     return req.bot_message;
-//   }
-
-//   const bot = async (input: string) => {
-//     setIsProcessing(true);
-//     const data = await getData(input);
-//     setMessages((prevMessages) => [...prevMessages, { id: 0, text: data }]);
-//     setIsProcessing(false);
-//   };
-
-//   async function fetchPreviousMessages() {
-//     setIsProcessing(true);
-//     const data = await axios
-//       .get(
-//         `${process.env.NEXT_PUBLIC_API_ROUTE}/get_messages/${conversationId}`
-//       )
-//       .then((res) => {
-//         setIsProcessing(false);
-//         return res.data;
-//       });
-//     console.log(data);
-//     return data;
-//   }
 
   React.useEffect(() => {
     setMessages([
@@ -94,30 +31,6 @@ export default function ChatDemo() {
           text: "Hi! I'm Temoc, your unofficial College Advising assistant. Please note that my responses may not always be entirely accurate. How can I help?",
         },
       ]);
-    // async function initializeMessages() {
-    //   if (conversationId === "New Chat") {
-    //     setMessages([
-    //       {
-    //         id: 0,
-    //         text: "Hi! I'm Temoc, your unofficial College Advising assistant. Please note that my responses may not always be entirely accurate. How can I help?",
-    //       },
-    //     ]);
-    //     return;
-    //   }
-    //   const previousMessages = await fetchPreviousMessages();
-
-    //   const mappedMessages = previousMessages.map(
-    //     (message: any, index: number) => {
-    //       const id = index % 2 === 0 ? 1 : 0;
-    //       return {
-    //         id: id,
-    //         text: message.user_message || message.bot_message,
-    //       };
-    //     }
-    //   );
-    //   setMessages([...mappedMessages]);
-    // }
-    // initializeMessages();
   }, []);
 
   React.useEffect(() => {
@@ -147,14 +60,6 @@ export default function ChatDemo() {
     return () => clearInterval(intervalId);
   }, [messages]);
 
-//   const send = (input: string) => {
-//     if (isProcessing || input.trim() === "") {
-//       return;
-//     }
-//     setMessages((prevMessages) => [...prevMessages, { id: 1, text: input }]);
-//     bot(input);
-//     setInput("");
-//   };
   return (
     <div className="h-full border-gray-700 w-full rounded-xl border p-1">
       <div className="border border-gray-700 h-full w-full rounded-lg flex flex-col">
@@ -189,37 +94,7 @@ export default function ChatDemo() {
             displayResponse={displayResponse}
             completedTyping={completedTyping}
           />
-          {/* {isProcessing && (
-            <div className="flex justify-center mb-2">
-              <div className="text-sm text-gray-500 animate-spin repeat-infinite">
-                <Loader2 />
-              </div>
-            </div>
-          )} */}
         </div>
-        {/* <div className="p-1 flex border-t border-gray-700">
-          <Input
-            className="rounded-r-none focus-visible:ring-0"
-            type="text"
-            onBlur={() => {
-              window.scrollTo({
-                top: 0,
-                left: 0,
-                behavior: 'smooth'
-              });
-            }}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && send(input)}
-            placeholder="Ask here ..."
-          />
-          <button
-            onClick={() => send(input)}
-            className="bg-orange-800 text-white px-2 p-1 rounded-md rounded-l-none"
-          >
-            <Send />
-          </button>
-        </div> */}
       </div>
     </div>
   );
