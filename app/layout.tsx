@@ -1,27 +1,33 @@
-import './globals.css'
-import { Inter } from 'next/font/google'
-import { ThemeProvider } from "@/components/theme-provider"
+import "./globals.css";
+import { Inter } from "next/font/google";
+import { ThemeProvider } from "@/components/theme-provider";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: 'Compass UTD',
-  description: 'A GPT powered chatbot for UTD students for course registration, financial aid, and more.',
-}
+  title: "Compass UTD",
+  description:
+    "A GPT powered chatbot for UTD students for course registration, financial aid, and more.",
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+      <head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+        />
+      </head>
       <body>
-      <ThemeProvider attribute="class" forcedTheme="dark" enableSystem>
-        {children}
+        <ThemeProvider attribute="class" forcedTheme="dark" enableSystem>
+          {children}
         </ThemeProvider>
-        </body>
+      </body>
     </html>
-  )
+  );
 }
