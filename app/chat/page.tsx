@@ -12,6 +12,10 @@ export default function Home() {
 
   return (
     <div className="flex justify-center h-[calc(100dvh)] items-center">
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+        />
       <div className="max-w-[500px] w-full md:p-5 md:max-h-[700px] h-full">
         <Chat />
       </div>
