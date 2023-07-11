@@ -34,9 +34,7 @@ export default function ChatMessages({
           >
             {message.id === 0 && index === messages.length - 1 ? (
               <div className="!text-sm">
-                 <ReactMarkdown>
                 {displayResponse}
-                </ReactMarkdown>
                 {!completedTyping && (
                   <svg
                     viewBox="8 4 8 16"

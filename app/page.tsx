@@ -13,17 +13,16 @@ export default function IndexPage({}: Props) {
   const [messageCount, setMessageCount] = React.useState(0);
 
   function time_diff(providedDate: any) {
-    console.log(providedDate)
     var currentDate = new Date();
-  
+
     // Calculate the time difference in milliseconds
     var difference = currentDate.getTime() - providedDate * 1000;
-  
+
     // Calculate the time difference in hours, minutes, and seconds
     var hours = Math.floor(difference / (1000 * 60 * 60));
     var minutes = Math.floor((difference / (1000 * 60)) % 60);
     var seconds = Math.floor((difference / 1000) % 60);
-  
+
     // Determine the most relevant unit
     var closestUnit;
     var closestValue;
@@ -37,10 +36,19 @@ export default function IndexPage({}: Props) {
       closestUnit = "seconds";
       closestValue = seconds;
     }
-  
+
+    // Adjust the unit if closestValue is 1
+    if (closestValue === 1) {
+      closestUnit = closestUnit.slice(0, -1); // Remove the 's' from the unit
+    }
+
     return closestValue + " " + closestUnit;
   }
-  
+
+  // Example usage
+  var providedDate = 1651234567; // Replace with your desired date in seconds
+  console.log(time_diff(providedDate));
+
   React.useEffect(() => {
     async function executeRequests() {
       try {
@@ -65,10 +73,12 @@ export default function IndexPage({}: Props) {
       <div className="flex flex-col items-center gap-10">
         <div className="flex flex-col gap-5 items-center">
           <div className="font-bold flex flex-wrap justify-center items-center tracking-tight text-4xl md:text-6xl lg:text-8xl">
-            <span className="grad-text flex-shrink">UTD </span><span className="invisible">i</span>
+            <span className="grad-text flex-shrink">UTD </span>
+            <span className="invisible">i</span>
             <span className="inline-block">
-            <span className="grad-text">College</span><span className="invisible">i</span>
-            <span className="grad-text">Advisor</span>
+              <span className="grad-text">College</span>
+              <span className="invisible">i</span>
+              <span className="grad-text">Advisor</span>
             </span>
           </div>
           <Badge className="w-fit">Public Beta out now</Badge>
@@ -100,13 +110,13 @@ export default function IndexPage({}: Props) {
               <ChatDemo />
               <div className="dark-shadow" />
               <div className="absolute z-10 left-0 right-0 top-0 bottom-0 m-auto flex justify-center items-center">
-            <Button
-              className="shadow-white text-base text-bold text-black"
-              size={"lg"}
-            >
-              Get Started
-            </Button>
-          </div>
+                <Button
+                  className="shadow-white text-base text-bold text-black"
+                  size={"lg"}
+                >
+                  Get Started
+                </Button>
+              </div>
             </div>
             <div className="w-full lg:w-[150px] flex justify-evenly font-bold tracking-tight grad-text text-2xl z-10 mt-10 lg:mt-20">
               {pageCount !== 0 && messageCount !== 0 && (
@@ -130,12 +140,12 @@ export default function IndexPage({}: Props) {
         </Link>
         <div className="flex flex-col items-center gap-1">
           <div className="font-medium text-xl">Powered By</div>
-          <div className="font-bold tracking-tight text-2xl md:text-4xl lg:text-6xl">
-            💪 <span className="grad-text">Vertex AI</span> +{" "}
-            <span className="grad-text">Langchain</span> 🦜
+          <div className="font-bold tracking-tight text-2xl sm:text-5xl lg:text-6xl">
+            🌴 <span className="grad-text">PaLM 2</span> +{" "}
+            <span className="grad-text">MongoDB</span> 🍃
           </div>
         </div>
-        <Badge variant={"outline"} className="text-sm font-medium">
+        <Badge variant={"outline"} className="text-sm font-medium -mt-5">
           Website designed by Arihan Varanasi
         </Badge>
       </div>
