@@ -19,7 +19,7 @@ export async function GET() {
         const db = client.db("chat_history");
         const collectionName = "message_store";
         const collection = db.collection(collectionName);
-        const count = await collection.countDocuments();
+        const count = await collection.countDocuments({});
         return count;
       } finally {
         await client.close();
